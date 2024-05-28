@@ -11,6 +11,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
@@ -210,44 +211,127 @@ public class CompletedScheduleController {
             System.out.println(id);
         }
         if (id!=null) {
-            fillSchedule(id);
+            fillSchedule(id,"Monday","Tuesday","Wednesday","Thursday","Friday");
         }
     }
-    public void fillSchedule(int scheduleId) {
+    public void fillDaySchedule(String dayOfWeek, int scheduleId) {
         final String DATABASE_URL = "jdbc:postgresql://localhost:5432/Diploma";
         final String DATABASE_USER = "postgres";
         final String DATABASE_PASSWORD = "1234";
 
-        System.out.println("Schedule ID in fillSchedule: " + scheduleId); // Debug output
-
+        // Запрос для получения пар для выбранной группы и выбранного дня
         String query = """
-    SELECT cs.day_of_week, s.subject_name, t.teacher_name, a.building, a.room_number
+    SELECT s.subject_name, t.full_name as teacher_name, 
+           a.building || '.' || a.room_number as auditory_name
     FROM completed_schedule cs
     JOIN subject s ON cs.subject_id = s.id
     JOIN teacher t ON cs.teacher_id = t.id
     JOIN auditory a ON cs.auditory_id = a.id
-    WHERE cs.id = ?
-""";
+    WHERE cs.group_name = (
+        SELECT group_name FROM completed_schedule WHERE id = ?
+    )
+    AND cs.day_of_week = ?
+    """;
 
         try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
              PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, scheduleId);
+            ps.setString(2, dayOfWeek);
             ResultSet rs = ps.executeQuery();
 
+            // Заполняем таблицу данными из результата запроса для выбранного дня недели
+            ObservableList<String> entries = FXCollections.observableArrayList();
             while (rs.next()) {
-                String dayOfWeek = rs.getString("day_of_week");
                 String subject = rs.getString("subject_name");
                 String teacher = rs.getString("teacher_name");
-                String building = rs.getString("building");
-                int roomNumber = rs.getInt("room_number");
+                String auditory = rs.getString("auditory_name");
+                String entry = String.format("%s, %s, %s", subject, teacher, auditory);
+                entries.add(entry);
+                System.out.println("Number of entries for " + dayOfWeek + " " + entries.size());
+            }
+            System.out.println("Day: " + dayOfWeek + ", Entries: " + entries); // Отладочный вывод
+            TableView<String> table = getTableViewByDay(dayOfWeek);
+            if (table != null) {
+                if (!entries.isEmpty()) {
+                    switch (dayOfWeek) {
+                        case "Monday":
+                            setCellValueFactoriesForMonday();
+                            break;
+                        case "Tuesday":
+                            setCellValueFactoriesForTuesday();
+                            break;
+                        case "Wednesday":
+                            setCellValueFactoriesForWednesday();
+                            break;
+                        case "Thursday":
+                            setCellValueFactoriesForThursday();
+                            break;
+                        case "Friday":
+                            setCellValueFactoriesForFriday();
+                            break;
+                        default:
+                            System.out.println("Error in switch case");
 
-                System.out.println("Day: " + dayOfWeek + ", Subject: " + subject + ", Teacher: " + teacher + ", Auditory: " + building + "." + roomNumber); // Debug output
+                    }
+                    table.setItems(entries);
+                    System.out.println(entries.size());
+                } else {
+                    entries.add("Окно");
+                    table.setItems(entries);
+                }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
+
+    public void fillSchedule(int scheduleId, String... daysOfWeek) {
+        for (String day : daysOfWeek) {
+            System.out.println("day of week: " + daysOfWeek);
+            fillDaySchedule(day, scheduleId);
+        }
+    }
+
+    // Метод для получения таблицы по дню недели
+    private TableView<String> getTableViewByDay(String dayOfWeek) {
+        switch (dayOfWeek) {
+            case "Monday":
+                return Monday;
+            case "Tuesday":
+                return Tuesday;
+            case "Wednesday":
+                return Wednesday;
+            case "Thursday":
+                return Thursday;
+            case "Friday":
+                return Friday;
+            default:
+                return null;
+        }
+    }
+    private void setCellValueFactoriesForDay(TableColumn<String, String> subjectColumn, TableColumn<String, String> teacherColumn, TableColumn<String, String> auditoryColumn) {
+        subjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
+        teacherColumn.setCellValueFactory(new PropertyValueFactory<>("teacher"));
+        auditoryColumn.setCellValueFactory(new PropertyValueFactory<>("auditory"));
+    }
+
+    private void setCellValueFactoriesForMonday() {
+        setCellValueFactoriesForDay(Subject1, Teacher1, Auditory1);
+    }
+
+    private void setCellValueFactoriesForTuesday() {
+        setCellValueFactoriesForDay(Subject2, Teacher2, Auditory2);
+    }
+    private void setCellValueFactoriesForWednesday() {
+        setCellValueFactoriesForDay(Subject3, Teacher3, Auditory3);
+    }
+    private void setCellValueFactoriesForThursday() {
+        setCellValueFactoriesForDay(Subject4, Teacher4, Auditory4);
+    }
+    private void setCellValueFactoriesForFriday() {
+        setCellValueFactoriesForDay(Subject5, Teacher5, Auditory5);
+    }
 
 //    public void fillSchedule(int groupId) {
 //        final String DATABASE_URL = "jdbc:postgresql://localhost:5432/Diploma";
