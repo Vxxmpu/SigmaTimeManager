@@ -1,5 +1,7 @@
 package com.example.sigmatimemanager.fxml_controller;
 
+
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -37,43 +39,44 @@ public class CompletedScheduleController {
     @FXML
     TableView<String> Monday;
     @FXML
-    TableColumn Subject1;
+    TableColumn<String , String> Subject1;
     @FXML
-    TableColumn Teacher1;
+    TableColumn<String , String> Teacher1;
     @FXML
-    TableColumn Auditory1;
+    TableColumn<String , String> Auditory1;
     @FXML
     TableView<String> Tuesday;
     @FXML
-    TableColumn Subject2;
+    TableColumn<String , String> Subject2;
     @FXML
-    TableColumn Teacher2;
+    TableColumn<String , String> Teacher2;
     @FXML
-    TableColumn Auditory2;
+    TableColumn<String , String> Auditory2;
     @FXML
     TableView<String> Wednesday;
     @FXML
-    TableColumn Subject3;
+    TableColumn<String , String>  Subject3;
     @FXML
-    TableColumn Teacher3;
+    TableColumn<String , String> Teacher3;
     @FXML
-    TableColumn Auditory3;
+    TableColumn<String , String> Auditory3;
     @FXML
     TableView<String> Thursday;
     @FXML
-    TableColumn Subject4;
+    TableColumn<String , String> Subject4;
     @FXML
-    TableColumn Teacher4;
+    TableColumn<String , String> Teacher4;
     @FXML
-    TableColumn Auditory4;
+    TableColumn<String , String> Auditory4;
     @FXML
     TableView<String> Friday;
     @FXML
-    TableColumn Subject5;
+    TableColumn<String , String> Subject5;
     @FXML
-    TableColumn Teacher5;
+    TableColumn<String , String>Teacher5;
     @FXML
-    TableColumn Auditory5;
+    TableColumn<String , String> Auditory5;
+    Integer id;
     public void initialize() {
         fillChoices();
     }
@@ -172,6 +175,16 @@ public class CompletedScheduleController {
                             groups.add(group);
                         }
                         groupComboBox.setItems(groups);
+
+                        groupComboBox.getSelectionModel().selectedItemProperty().addListener((observableGroup, oldGroup, newGroup) -> {
+                            if (newGroup != null) {
+                                try {
+                                    getScheduleId();
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -181,6 +194,145 @@ public class CompletedScheduleController {
             ex.printStackTrace();
         }
     }
+    void getScheduleId() throws SQLException {
+        Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
+        String groupBox = groupComboBox.getValue();
+        String dateBox = dateComboBox.getValue();
+        Integer classBox = classComboBox.getValue();
+        String query = "SELECT id FROM completed_schedule WHERE group_name = ? AND day_of_week = ? AND class_number = ?";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setString(1, groupBox);
+        ps.setString(2, dateBox);
+        ps.setInt(3, classBox);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            id = rs.getInt("id");
+            System.out.println(id);
+        }
+        if (id!=null) {
+            fillSchedule(id);
+        }
+    }
+    public void fillSchedule(int scheduleId) {
+        final String DATABASE_URL = "jdbc:postgresql://localhost:5432/Diploma";
+        final String DATABASE_USER = "postgres";
+        final String DATABASE_PASSWORD = "1234";
+
+        System.out.println("Schedule ID in fillSchedule: " + scheduleId); // Debug output
+
+        String query = """
+    SELECT cs.day_of_week, s.subject_name, t.teacher_name, a.building, a.room_number
+    FROM completed_schedule cs
+    JOIN subject s ON cs.subject_id = s.id
+    JOIN teacher t ON cs.teacher_id = t.id
+    JOIN auditory a ON cs.auditory_id = a.id
+    WHERE cs.id = ?
+""";
+
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, scheduleId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String dayOfWeek = rs.getString("day_of_week");
+                String subject = rs.getString("subject_name");
+                String teacher = rs.getString("teacher_name");
+                String building = rs.getString("building");
+                int roomNumber = rs.getInt("room_number");
+
+                System.out.println("Day: " + dayOfWeek + ", Subject: " + subject + ", Teacher: " + teacher + ", Auditory: " + building + "." + roomNumber); // Debug output
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
+//    public void fillSchedule(int groupId) {
+//        final String DATABASE_URL = "jdbc:postgresql://localhost:5432/Diploma";
+//        final String DATABASE_USER = "postgres";
+//        final String DATABASE_PASSWORD = "1234";
+//
+//        String query = """
+//        SELECT cs.day_of_week, s.subject_name, t.full_name as teacher_name,
+//               a.building || '.' || a.room_number as auditory_name
+//        FROM completed_schedule cs
+//        JOIN subject s ON cs.subject_id = s.id
+//        JOIN teacher t ON cs.teacher_id = t.id
+//        JOIN auditory a ON cs.auditory_id = a.id
+//        WHERE cs.group_id = ?
+//    """;
+//
+//        try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
+//             PreparedStatement ps = connection.prepareStatement(query)) {
+//            ps.setInt(1, groupId);
+//            ResultSet rs = ps.executeQuery();
+//
+//            ObservableList<String> mondayList = FXCollections.observableArrayList();
+//            ObservableList<String> tuesdayList = FXCollections.observableArrayList();
+//            ObservableList<String> wednesdayList = FXCollections.observableArrayList();
+//            ObservableList<String> thursdayList = FXCollections.observableArrayList();
+//            ObservableList<String> fridayList = FXCollections.observableArrayList();
+//
+//            while (rs.next()) {
+//                String dayOfWeek = rs.getString("day_of_week");
+//                String subject = rs.getString("subject_name");
+//                String teacher = rs.getString("teacher_name");
+//                String auditory = rs.getString("auditory_name");
+//                String entry = String.format("%s, %s, %s", subject, teacher, auditory);
+//
+//                System.out.println("Day: " + dayOfWeek + " Entry: " + entry); // Debug output
+//
+//                switch (dayOfWeek) {
+//                    case "Monday":
+//                        mondayList.add(entry);
+//                        break;
+//                    case "Tuesday":
+//                        tuesdayList.add(entry);
+//                        break;
+//                    case "Wednesday":
+//                        wednesdayList.add(entry);
+//                        break;
+//                    case "Thursday":
+//                        thursdayList.add(entry);
+//                        break;
+//                    case "Friday":
+//                        fridayList.add(entry);
+//                        break;
+//                }
+//            }
+//
+//            Monday.setItems(mondayList);
+//            Tuesday.setItems(tuesdayList);
+//            Wednesday.setItems(wednesdayList);
+//            Thursday.setItems(thursdayList);
+//            Friday.setItems(fridayList);
+//
+//            Subject1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
+//            Teacher1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
+//            Auditory1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
+//
+//            Subject2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
+//            Teacher2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
+//            Auditory2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
+//
+//            Subject3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
+//            Teacher3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
+//            Auditory3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
+//
+//            Subject4.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
+//            Teacher4.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
+//            Auditory4.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
+//
+//            Subject5.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
+//            Teacher5.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
+//            Auditory5.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//        }
+//    }
+
 //    public void fillSchedule(int id) {
 //        try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD)) {
 //            String querySubject = "SELECT subject_id FROM completed_schedule WHERE id = ?";
