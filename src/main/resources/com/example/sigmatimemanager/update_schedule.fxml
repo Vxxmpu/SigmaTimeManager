@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="MainPane" prefHeight="790.0" prefWidth="1540.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sigmatimemanager.fxml_controller.UpdateScheduleController">
+   <children>
+      <Pane layoutX="80.0" layoutY="70.0" prefHeight="203.0" prefWidth="936.0">
+         <children>
+            <ChoiceBox fx:id="ChooseCourse" layoutX="40.0" layoutY="60.0" prefWidth="150.0" />
+            <ComboBox fx:id="directionComboBox" layoutX="280.0" layoutY="60.0" prefWidth="150.0" />
+            <Label alignment="CENTER" layoutX="40.0" layoutY="5.0" prefHeight="33.0" prefWidth="152.0" text="Choose Course" />
+            <Label alignment="CENTER" layoutX="280.0" layoutY="5.0" prefHeight="33.0" prefWidth="148.0" text="Choose direction" />
+            <ComboBox fx:id="dateComboBox" layoutX="520.0" layoutY="60.0" prefWidth="150.0" />
+            <Label alignment="CENTER" layoutX="520.0" layoutY="5.0" prefHeight="33.0" prefWidth="150.0" text="Choose date" />
+            <Label alignment="CENTER" layoutX="20.0" layoutY="150.0" prefHeight="33.0" prefWidth="323.0" text="Mark with radio button to NOT make changes" textAlignment="CENTER">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="classComboBox" layoutX="760.0" layoutY="60.0" prefWidth="150.0" />
+            <Label alignment="CENTER" layoutX="760.0" layoutY="5.0" prefHeight="33.0" prefWidth="150.0" text="Choose class" />
+            <ComboBox fx:id="groupComboBox" layoutX="410.0" layoutY="157.0" prefWidth="150.0" />
+            <Label alignment="CENTER" layoutX="410.0" layoutY="102.0" prefHeight="33.0" prefWidth="150.0" text="Choose group" />
+         </children>
+      </Pane>
+      <Pane layoutX="160.0" layoutY="260.0" prefHeight="285.0" prefWidth="380.0">
+         <children>
+            <Label alignment="CENTER" layoutX="120.0" layoutY="5.0" prefHeight="40.0" prefWidth="139.0" text="Class:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="classChoiceBox" layoutX="95.0" layoutY="50.0" prefHeight="35.0" prefWidth="185.0" />
+            <Label alignment="CENTER" layoutX="120.0" layoutY="140.0" prefHeight="40.0" prefWidth="139.0" text="Date:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="problem2" alignment="CENTER" layoutX="290.0" layoutY="47.0" prefHeight="40.0" prefWidth="139.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="problem3" alignment="CENTER" layoutX="290.0" layoutY="197.0" prefHeight="40.0" prefWidth="139.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <RadioButton fx:id="radioLock3" layoutX="20.0" layoutY="202.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="78.0" text="Lock" />
+            <RadioButton fx:id="radioLock2" layoutX="20.0" layoutY="55.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="78.0" text="Lock" />
+            <Button fx:id="checkButton" layoutX="150.0" layoutY="350.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="99.0" text="Check!" />
+            <Button fx:id="backButton" layoutY="350.0" mnemonicParsing="false" onAction="#handleBackButtonAction" prefHeight="40.0" prefWidth="99.0" text="Back!" />
+            <Button fx:id="confirmButton" layoutX="300.0" layoutY="350.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="99.0" text="Confirm!" />
+            <ComboBox fx:id="dayOfWeek" layoutX="95.0" layoutY="197.0" prefHeight="35.0" prefWidth="185.0" />
+         </children>
+      </Pane>
+      <Pane layoutX="640.0" layoutY="260.0" prefHeight="450.0" prefWidth="380.0">
+         <children>
+            <Label alignment="CENTER" layoutX="120.0" layoutY="140.0" prefHeight="40.0" prefWidth="139.0" text="Teacher:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="subjectChoiceBox" layoutX="95.0" layoutY="50.0" prefHeight="35.0" prefWidth="185.0" />
+            <ChoiceBox fx:id="teacherChoiceBox" layoutX="95.0" layoutY="200.0" prefHeight="35.0" prefWidth="185.0" />
+            <Label alignment="CENTER" layoutX="120.0" layoutY="5.0" prefHeight="40.0" prefWidth="139.0" text="Subject:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="problem4" alignment="CENTER" layoutX="290.0" layoutY="47.0" prefHeight="40.0" prefWidth="139.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="problem5" alignment="CENTER" layoutX="290.0" layoutY="197.0" prefHeight="40.0" prefWidth="139.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="120.0" layoutY="250.0" prefHeight="40.0" prefWidth="139.0" text="Auditory:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="auditoryFloorChoiceBox" layoutX="140.0" layoutY="360.0" prefHeight="35.0" prefWidth="99.0" />
+            <Label fx:id="problem6" alignment="CENTER" layoutX="290.0" layoutY="347.0" prefHeight="40.0" prefWidth="139.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="auditoryBuildingChoiceBox" layoutX="20.0" layoutY="360.0" prefHeight="35.0" prefWidth="99.0" />
+            <ChoiceBox fx:id="auditoryRoomChoiceBox" layoutX="250.0" layoutY="360.0" prefHeight="35.0" prefWidth="99.0" />
+            <Label alignment="CENTER" layoutX="140.0" layoutY="310.0" prefHeight="40.0" prefWidth="104.0" text="Floor:" textAlignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="20.0" layoutY="310.0" prefHeight="40.0" prefWidth="104.0" text="Building" textAlignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="250.0" layoutY="310.0" prefHeight="40.0" prefWidth="104.0" text="Room" textAlignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <RadioButton fx:id="radioLock5" layoutX="20.0" layoutY="202.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="78.0" text="Lock" />
+            <RadioButton fx:id="radioLock4" layoutX="20.0" layoutY="54.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="78.0" text="Lock" />
+            <RadioButton fx:id="radioLock6" layoutX="20.0" layoutY="285.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="78.0" text="Lock" />
+         </children>
+      </Pane>
+      <Pane layoutX="1050.0" layoutY="60.0" prefHeight="646.0" prefWidth="430.0">
+         <children>
+            <Label alignment="CENTER" layoutX="97.0" layoutY="21.0" prefHeight="40.0" prefWidth="263.0" text="Last created/updated groups:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TableView fx:id="recentGroupsView" layoutX="1.0" layoutY="92.0" prefHeight="554.0" prefWidth="424.0">
+              <columns>
+                <TableColumn fx:id="groupCol" prefWidth="162.6666259765625" text="Group Name" />
+                <TableColumn fx:id="courseCol" prefWidth="90.666748046875" text="Course" />
+                  <TableColumn fx:id="dateCol" prefWidth="171.7332763671875" text="date time" />
+              </columns>
+            </TableView>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
