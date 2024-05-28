@@ -249,7 +249,8 @@ public class CompletedScheduleController {
                 entries.add(entry);
                 System.out.println("Number of entries for " + dayOfWeek + " " + entries.size());
             }
-            System.out.println("Day: " + dayOfWeek + ", Entries: " + entries); // Отладочный вывод
+            System.out.println("Day: " + dayOfWeek + ", Entries: " + entries);
+
             TableView<String> table = getTableViewByDay(dayOfWeek);
             if (table != null) {
                 if (!entries.isEmpty()) {
@@ -271,7 +272,6 @@ public class CompletedScheduleController {
                             break;
                         default:
                             System.out.println("Error in switch case");
-
                     }
                     table.setItems(entries);
                     System.out.println(entries.size());
@@ -310,27 +310,34 @@ public class CompletedScheduleController {
                 return null;
         }
     }
-    private void setCellValueFactoriesForDay(TableColumn<String, String> subjectColumn, TableColumn<String, String> teacherColumn, TableColumn<String, String> auditoryColumn) {
-        subjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
-        teacherColumn.setCellValueFactory(new PropertyValueFactory<>("teacher"));
-        auditoryColumn.setCellValueFactory(new PropertyValueFactory<>("auditory"));
-    }
-
     private void setCellValueFactoriesForMonday() {
-        setCellValueFactoriesForDay(Subject1, Teacher1, Auditory1);
+        Subject1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
+        Teacher1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
+        Auditory1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
     }
 
     private void setCellValueFactoriesForTuesday() {
-        setCellValueFactoriesForDay(Subject2, Teacher2, Auditory2);
+        Subject2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
+        Teacher2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
+        Auditory2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
     }
+
     private void setCellValueFactoriesForWednesday() {
-        setCellValueFactoriesForDay(Subject3, Teacher3, Auditory3);
+        Subject3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
+        Teacher3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
+        Auditory3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
     }
+
     private void setCellValueFactoriesForThursday() {
-        setCellValueFactoriesForDay(Subject4, Teacher4, Auditory4);
+        Subject4.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
+        Teacher4.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
+        Auditory4.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
     }
+
     private void setCellValueFactoriesForFriday() {
-        setCellValueFactoriesForDay(Subject5, Teacher5, Auditory5);
+        Subject5.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
+        Teacher5.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
+        Auditory5.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
     }
 
 //    public void fillSchedule(int groupId) {
