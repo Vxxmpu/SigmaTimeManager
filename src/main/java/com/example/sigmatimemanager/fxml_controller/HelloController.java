@@ -57,5 +57,15 @@ public class HelloController {
             throw new RuntimeException(e);
         }
     }
-
+    @FXML
+    void handleTutorialAction(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/sigmatimemanager/tutorial.fxml"));
+            AnchorPane MainPane = loader.load();
+            HelloPane.getChildren().clear();
+            HelloPane.getChildren().add(MainPane);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

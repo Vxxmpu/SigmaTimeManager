@@ -35,6 +35,6 @@
             <Font name="Trebuchet MS" size="20.0" />
          </font>
       </Label>
-      <Button fx:id="view_tutorial" layoutX="1339.0" layoutY="547.0" mnemonicParsing="false" onAction="#handleCreateButtonAction" prefHeight="40.0" prefWidth="83.0" text="GO!" />
+      <Button fx:id="view_tutorial" layoutX="1339.0" layoutY="547.0" mnemonicParsing="false" onAction="#handleTutorialAction" prefHeight="40.0" prefWidth="83.0" text="GO!" />
    </children>
 </Pane>
