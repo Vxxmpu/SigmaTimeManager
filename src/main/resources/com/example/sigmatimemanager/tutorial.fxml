@@ -4,22 +4,17 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="790.0" prefWidth="1540.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sigmatimemanager.fxml_controller.Tutorial">
+<AnchorPane fx:id="MainPane" prefHeight="790.0" prefWidth="1540.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sigmatimemanager.fxml_controller.Tutorial">
    <children>
-      <Pane layoutX="250.0" layoutY="180.0" prefHeight="470.0" prefWidth="929.0">
-         <children>
-            <ImageView fx:id="imageView" fitHeight="440.0" fitWidth="775.0" layoutX="90.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
-         </children>
-      </Pane>
-      <Button fx:id="buttonPrevious" layoutX="518.0" layoutY="674.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="111.0" text="Previous">
+      <Button fx:id="buttonPrevious" layoutX="518.0" layoutY="674.0" mnemonicParsing="false" onAction="#handlePreviousButtonAction" prefHeight="54.0" prefWidth="111.0" text="Previous">
          <font>
             <Font name="Trebuchet MS" size="16.0" />
          </font>
       </Button>
-      <Button fx:id="buttonNext" layoutX="878.0" layoutY="675.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="111.0" text="Next">
+      <Button fx:id="buttonNext" layoutX="878.0" layoutY="675.0" mnemonicParsing="false" onAction="#handleNextButtonAction" prefHeight="54.0" prefWidth="111.0" text="Next">
          <font>
             <Font name="Trebuchet MS" size="16.0" />
          </font>
@@ -29,15 +24,16 @@
             <Font name="Trebuchet MS" size="16.0" />
          </font>
       </Button>
-      <Label fx:id="stepLabel" alignment="CENTER" layoutX="682.0" layoutY="679.0" prefHeight="42.0" prefWidth="139.0" text="current step:" textAlignment="CENTER">
+      <Label fx:id="stepLabel" alignment="CENTER" layoutX="640.0" layoutY="679.0" prefHeight="42.0" prefWidth="232.0" text="current step:" textAlignment="CENTER">
          <font>
             <Font name="Trebuchet MS" size="16.0" />
          </font>
       </Label>
-      <Label fx:id="explanation" alignment="CENTER" layoutX="427.0" layoutY="86.0" prefHeight="108.0" prefWidth="550.0">
+      <Text fx:id="explanation" layoutX="460.0" layoutY="90.0" textAlignment="CENTER" wrappingWidth="550.0">
          <font>
             <Font name="Trebuchet MS" size="14.0" />
          </font>
-      </Label>
+      </Text>
+      <ImageView fx:id="imageView" fitHeight="494.0" fitWidth="871.0" layoutX="330.0" layoutY="178.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

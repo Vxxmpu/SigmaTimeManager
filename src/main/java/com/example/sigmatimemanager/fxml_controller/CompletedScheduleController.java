@@ -7,18 +7,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.sql.*;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 
 public class CompletedScheduleController {
     final String DATABASE_URL = "jdbc:postgresql://localhost:5432/Diploma";
@@ -163,11 +157,17 @@ public class CompletedScheduleController {
                     groupComboBox.getItems().clear();
 
                     try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD)) {
-                        String groupQuery = "SELECT DISTINCT group_name FROM completed_schedule WHERE group_name IN (SELECT DISTINCT group_name FROM groups WHERE SUBSTRING(group_name, 1, 2) = ?) AND day_of_week = ? AND class_number = ?";
+                        String groupQuery = "SELECT DISTINCT cs.group_name FROM completed_schedule cs " +
+                                "JOIN groups g ON cs.group_id = g.id " +
+                                "WHERE SUBSTRING(cs.group_name, 1, 2) = ? " +
+                                "AND g.course = ? " +
+                                "AND cs.day_of_week = ? " +
+                                "AND cs.class_number = ?";
                         PreparedStatement psGroup = connection.prepareStatement(groupQuery);
                         psGroup.setString(1, directionComboBox.getValue().substring(0, 2));
-                        psGroup.setString(2, dateComboBox.getValue());
-                        psGroup.setInt(3, newValue);
+                        psGroup.setInt(2, ChooseCourse.getValue());
+                        psGroup.setString(3, dateComboBox.getValue());
+                        psGroup.setInt(4, newValue);
                         ResultSet rsGroup = psGroup.executeQuery();
 
                         ObservableList<String> groups = FXCollections.observableArrayList();
@@ -311,171 +311,141 @@ public class CompletedScheduleController {
         }
     }
     private void setCellValueFactoriesForMonday() {
-        Subject1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
-        Teacher1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
-        Auditory1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
+        Subject1.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[0]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
+        Teacher1.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[1]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
+        Auditory1.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[2]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
     }
+
 
     private void setCellValueFactoriesForTuesday() {
-        Subject2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
-        Teacher2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
-        Auditory2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
+        Subject2.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[0]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
+        Teacher2.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[1]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
+        Auditory2.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[2]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
     }
 
+
     private void setCellValueFactoriesForWednesday() {
-        Subject3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
-        Teacher3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
-        Auditory3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
+        Subject3.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[0]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
+        Teacher3.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[1]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
+        Auditory3.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[2]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
     }
 
     private void setCellValueFactoriesForThursday() {
-        Subject4.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
-        Teacher4.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
-        Auditory4.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
+        Subject4.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[0]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
+        Teacher4.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[1]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
+        Auditory4.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[2]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
     }
 
     private void setCellValueFactoriesForFriday() {
-        Subject5.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
-        Teacher5.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
-        Auditory5.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
+        Subject5.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[0]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
+        Teacher5.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[1]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
+        Auditory5.setCellValueFactory(data -> {
+            String[] parts = data.getValue().split(", ");
+            if (parts.length >= 3) {
+                return new SimpleStringProperty(parts[2]);
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
     }
-
-//    public void fillSchedule(int groupId) {
-//        final String DATABASE_URL = "jdbc:postgresql://localhost:5432/Diploma";
-//        final String DATABASE_USER = "postgres";
-//        final String DATABASE_PASSWORD = "1234";
-//
-//        String query = """
-//        SELECT cs.day_of_week, s.subject_name, t.full_name as teacher_name,
-//               a.building || '.' || a.room_number as auditory_name
-//        FROM completed_schedule cs
-//        JOIN subject s ON cs.subject_id = s.id
-//        JOIN teacher t ON cs.teacher_id = t.id
-//        JOIN auditory a ON cs.auditory_id = a.id
-//        WHERE cs.group_id = ?
-//    """;
-//
-//        try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-//             PreparedStatement ps = connection.prepareStatement(query)) {
-//            ps.setInt(1, groupId);
-//            ResultSet rs = ps.executeQuery();
-//
-//            ObservableList<String> mondayList = FXCollections.observableArrayList();
-//            ObservableList<String> tuesdayList = FXCollections.observableArrayList();
-//            ObservableList<String> wednesdayList = FXCollections.observableArrayList();
-//            ObservableList<String> thursdayList = FXCollections.observableArrayList();
-//            ObservableList<String> fridayList = FXCollections.observableArrayList();
-//
-//            while (rs.next()) {
-//                String dayOfWeek = rs.getString("day_of_week");
-//                String subject = rs.getString("subject_name");
-//                String teacher = rs.getString("teacher_name");
-//                String auditory = rs.getString("auditory_name");
-//                String entry = String.format("%s, %s, %s", subject, teacher, auditory);
-//
-//                System.out.println("Day: " + dayOfWeek + " Entry: " + entry); // Debug output
-//
-//                switch (dayOfWeek) {
-//                    case "Monday":
-//                        mondayList.add(entry);
-//                        break;
-//                    case "Tuesday":
-//                        tuesdayList.add(entry);
-//                        break;
-//                    case "Wednesday":
-//                        wednesdayList.add(entry);
-//                        break;
-//                    case "Thursday":
-//                        thursdayList.add(entry);
-//                        break;
-//                    case "Friday":
-//                        fridayList.add(entry);
-//                        break;
-//                }
-//            }
-//
-//            Monday.setItems(mondayList);
-//            Tuesday.setItems(tuesdayList);
-//            Wednesday.setItems(wednesdayList);
-//            Thursday.setItems(thursdayList);
-//            Friday.setItems(fridayList);
-//
-//            Subject1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
-//            Teacher1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
-//            Auditory1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
-//
-//            Subject2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
-//            Teacher2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
-//            Auditory2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
-//
-//            Subject3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
-//            Teacher3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
-//            Auditory3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
-//
-//            Subject4.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
-//            Teacher4.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
-//            Auditory4.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
-//
-//            Subject5.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[0]));
-//            Teacher5.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[1]));
-//            Auditory5.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().split(", ")[2]));
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-
-//    public void fillSchedule(int id) {
-//        try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD)) {
-//            String querySubject = "SELECT subject_id FROM completed_schedule WHERE id = ?";
-//            String queryTeacher = "SELECT teacher_id FROM completed_schedule WHERE id = ?";
-//            String queryAuditory = "SELECT auditory_id FROM completed_schedule WHERE id = ?";
-//            PreparedStatement ps = connection.prepareStatement(querySubject);
-//            ps.setInt(1, id);
-//            ResultSet rs = ps.executeQuery();
-//
-//            if (rs.next()) {
-//                String subject = rs.getString("subject_name");
-//                String teacher = rs.getString("teacher_name");
-//                String auditory = rs.getString("auditory_name");
-//                LocalDate date = rs.getDate("date").toLocalDate();
-//
-//                DayOfWeek dayOfWeek = date.getDayOfWeek();
-//                switch (dayOfWeek) {
-//                    case MONDAY:
-//                        Monday.getItems().add(subject);
-//                        Monday.getItems().add(teacher);
-//                        Monday.getItems().add(auditory);
-//                        break;
-//                    case TUESDAY:
-//                        Tuesday.getItems().add(subject);
-//                        Tuesday.getItems().add(teacher);
-//                        Tuesday.getItems().add(auditory);
-//                        break;
-//                    case WEDNESDAY:
-//                        Wednesday.getItems().add(subject);
-//                        Wednesday.getItems().add(teacher);
-//                        Wednesday.getItems().add(auditory);
-//                        break;
-//                    case THURSDAY:
-//                        Thursday.getItems().add(subject);
-//                        Thursday.getItems().add(teacher);
-//                        Thursday.getItems().add(auditory);
-//                        break;
-//                    case FRIDAY:
-//                        Friday.getItems().add(subject);
-//                        Friday.getItems().add(teacher);
-//                        Friday.getItems().add(auditory);
-//                        break;
-//                    default:
-//                        break;
-//                }
-//            } else {
-//                // Обработка, если запись в базе данных не найдена
-//            }
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//        }
-//    }
 
     @FXML
     void handleBackButtonAction(ActionEvent actionEvent) {

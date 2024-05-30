@@ -7,11 +7,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
 import java.sql.*;
@@ -313,6 +316,7 @@ public class UpdateScheduleController {
         ObservableList<String> AuditoryBuilding = FXCollections.observableArrayList();
         ObservableList<Integer> AuditoryFloor = FXCollections.observableArrayList();
         ObservableList<Integer> AuditoryRoom = FXCollections.observableArrayList();
+        ObservableList<String> DayOfWeek = FXCollections.observableArrayList();
         final String DATABASE_URL = "jdbc:postgresql://localhost:5432/Diploma";
         final String DATABASE_USER = "postgres";
         final String DATABASE_PASSWORD = "1234";
@@ -325,6 +329,7 @@ public class UpdateScheduleController {
                 auditoryBuildingChoiceBox.getItems().clear();
                 auditoryFloorChoiceBox.getItems().clear();
                 auditoryRoomChoiceBox.getItems().clear();
+                dayOfWeek.getItems().clear();
                 try (Connection con = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
                      Statement stmt = con.createStatement();) {
                     ResultSet rsClass = stmt.executeQuery("SELECT DISTINCT classes FROM class");
@@ -362,6 +367,13 @@ public class UpdateScheduleController {
                     subjectChoiceBox.setItems(Subject);
                     teacherChoiceBox.setItems(Teacher);
                     auditoryBuildingChoiceBox.setItems(AuditoryBuilding);
+                    dayOfWeek.getItems().addAll(
+                            "Monday",
+                            "Tuesday",
+                            "Wednesday",
+                            "Thursday",
+                            "Friday"
+                    );
                     auditoryBuildingChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable1, oldValue1, newValue1) -> {
                         if (newValue1 != null) {
                             try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD)) {
@@ -431,7 +443,7 @@ public class UpdateScheduleController {
                     problem2.setText(problem);
                     break;
                 case "Все нормально!":
-                    problem2.setText(problem);
+                    showNotification("No problems seems to be occuring");
                     break;
             }
         }
@@ -457,7 +469,9 @@ public class UpdateScheduleController {
     TableColumn<GroupData, Integer> courseCol;
     @FXML
     TableColumn<GroupData, LocalDate> dateCol;
-    public void fillRecentGroupsView(){
+    @FXML
+    TableColumn<GroupData, Integer> classCol;
+    public void fillRecentGroupsView() {
         ObservableList<GroupData> data = FXCollections.observableArrayList();
 
         final String DATABASE_URL = "jdbc:postgresql://localhost:5432/Diploma";
@@ -466,15 +480,16 @@ public class UpdateScheduleController {
 
         try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
              Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT completed_schedule.group_name, groups.course, completed_schedule.updated_at " +
-                     "FROM completed_schedule INNER JOIN groups ON completed_schedule.group_id = groups.id")) {
+             ResultSet rs = stmt.executeQuery("SELECT completed_schedule.group_name, groups.course, completed_schedule.updated_at, completed_schedule.class_number " +
+                     "FROM completed_schedule INNER JOIN groups ON completed_schedule.group_id = groups.id ")) {
 
             while (rs.next()) {
                 String groupName = rs.getString("group_name");
                 int course = rs.getInt("course");
                 LocalDateTime updatedAt = rs.getTimestamp("updated_at").toLocalDateTime();
+                int classNumber = rs.getInt("class_number");
 
-                GroupData item = new GroupData(groupName, course, updatedAt);
+                GroupData item = new GroupData(groupName, course, updatedAt, classNumber);
                 data.add(item);
             }
 
@@ -485,6 +500,7 @@ public class UpdateScheduleController {
         groupCol.setCellValueFactory(new PropertyValueFactory<>("groupName"));
         courseCol.setCellValueFactory(new PropertyValueFactory<>("course"));
         dateCol.setCellValueFactory(new PropertyValueFactory<>("updatedAt"));
+        classCol.setCellValueFactory(new PropertyValueFactory<>("classNumber"));
 
         recentGroupsView.setItems(data);
     }
@@ -557,6 +573,78 @@ public class UpdateScheduleController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        showNotification("Successfully updated a schedule for : "+ groupComboBox.getValue());
     }
+    public static void showNotification(String message) {
+        Notifications notifications = Notifications.create()
+                .title("Уведомление")
+                .text(message)
+                .hideAfter(Duration.seconds(5)) // Уведомление исчезнет через 5 секунд
+                .position(Pos.TOP_RIGHT);
+        notifications.show();
+    }
+    @FXML
+    void handleConfirmAndStayButtonAction() throws SQLException {
+        Integer class_number = classChoiceBox.getValue();
+        String subjectName = subjectChoiceBox.getValue();
+        String teacherName = teacherChoiceBox.getValue();
+        String auditoryBuilding = auditoryBuildingChoiceBox.getValue();
+        Integer auditoryRoom = auditoryRoomChoiceBox.getValue();
+        Integer auditoryFloor = auditoryFloorChoiceBox.getValue();
+        String date = dayOfWeek.getValue();
+
+        Integer chooseCourseBox = ChooseCourse.getValue();
+        String groupBox = groupComboBox.getValue();
+        String dateBox = dateComboBox.getValue();
+        Integer classBox = classComboBox.getValue();
+
+        Boolean radioButton2 = radioLock2.isSelected();
+        Boolean radioButton3 = radioLock3.isSelected();
+        Boolean radioButton4 = radioLock4.isSelected();
+        Boolean radioButton5 = radioLock5.isSelected();
+        Boolean radioButton6 = radioLock6.isSelected();
+
+        Integer id = 0;
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD)) {
+            String query = "SELECT id FROM completed_schedule WHERE group_name = ? AND day_of_week = ? AND class_number = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, groupBox);
+            ps.setString(2, dateBox);
+            ps.setInt(3, classBox);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("id");
+                System.out.println("completed_schedule id: " + id);
+            } else {
+                System.out.println("Schedule not found 1.");
+            }
+        }catch (SQLException ex) {
+            System.out.println("Error 2.");
+            ex.printStackTrace();
+        }
+        try {
+            UpdateDBProblemChecker dbProblemChecker = new UpdateDBProblemChecker();
+            if (!radioButton2){
+                dbProblemChecker.updateClassNumber(id,class_number);
+            }
+            if (!radioButton3){
+                dbProblemChecker.updateDate(id,dateBox);
+            }
+            if (!radioButton4){
+                dbProblemChecker.updateSubjectId(id,subjectName);
+            }
+            if (!radioButton5){
+                dbProblemChecker.updateTeacherId(id,teacherName);
+            }
+            if (!radioButton6){
+                dbProblemChecker.updateAuditoryId(id,auditoryBuilding,auditoryRoom,auditoryFloor);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        showNotification("Successfully updated a schedule for : "+ groupComboBox.getValue());
+    }
+
 
 }

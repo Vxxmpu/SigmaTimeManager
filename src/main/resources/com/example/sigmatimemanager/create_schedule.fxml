@@ -104,6 +104,6 @@
          </children>
       </Pane>
       <Button fx:id="confirmButton" layoutX="775.0" layoutY="680.0" mnemonicParsing="false" onAction="#handleConfirmButtonAction" prefHeight="40.0" prefWidth="99.0" text="Confirm!" />
-      <Button fx:id="confrimButton2" layoutX="935.0" layoutY="680.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="148.0" text="Confirm and stay!" />
+      <Button fx:id="confrimButton2" layoutX="935.0" layoutY="680.0" mnemonicParsing="false" onAction="#handleConfirmAndStayButtonAction" prefHeight="40.0" prefWidth="148.0" text="Confirm and stay!" />
    </children>
 </AnchorPane>

@@ -7,9 +7,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 
 import java.io.IOException;
@@ -135,9 +138,7 @@ public class CreateScheduleController {
                     "Tuesday",
                     "Wednesday",
                     "Thursday",
-                    "Friday",
-                    "Saturday",
-                    "Sunday"
+                    "Friday"
             );
             auditoryBuildingChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
@@ -202,31 +203,61 @@ public class CreateScheduleController {
                     problem3.setText(problem);
                     break;
                 default:
-                    problem3.setText("Всё нормально");
+                    showNotification("No problems seems to be occurring");
             }
         }
     }
     @FXML
     void handleConfirmButtonAction() throws SQLException {
-        String groupName = groupChoiceBox.getValue();
-        Integer class_number = classChoiceBox.getValue();
-        String subjectName = subjectChoiceBox.getValue();
-        String teacherName = teacherChoiceBox.getValue();
-        String auditoryBuilding = auditoryBuildingChoiceBox.getValue();
-        Integer auditoryRoom = auditoryRoomChoiceBox.getValue();
-        Integer auditoryFloor = auditoryFloorChoiceBox.getValue();
-        String date = dayOfWeek.getValue();
-        createScheduleDBController.saveToDatabase(groupName, class_number, subjectName, teacherName,auditoryFloor,auditoryBuilding,auditoryRoom,date);
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/sigmatimemanager/hello-view.fxml"));
-            Pane HelloPane = loader.load();
-            MainPane.getChildren().clear();
-            MainPane.getChildren().add(HelloPane);
-        } catch (IOException e) {
-            e.printStackTrace();
+            String groupName = groupChoiceBox.getValue();
+            Integer class_number = classChoiceBox.getValue();
+            String subjectName = subjectChoiceBox.getValue();
+            String teacherName = teacherChoiceBox.getValue();
+            String auditoryBuilding = auditoryBuildingChoiceBox.getValue();
+            Integer auditoryRoom = auditoryRoomChoiceBox.getValue();
+            Integer auditoryFloor = auditoryFloorChoiceBox.getValue();
+            String date = dayOfWeek.getValue();
+            createScheduleDBController.saveToDatabase(groupName, class_number, subjectName, teacherName, auditoryFloor, auditoryBuilding, auditoryRoom, date);
+            showNotification("Successfully created a new schedule for : "+ groupChoiceBox.getValue());
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/sigmatimemanager/hello-view.fxml"));
+                Pane HelloPane = loader.load();
+                MainPane.getChildren().clear();
+                MainPane.getChildren().add(HelloPane);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
+    @FXML
+    void handleConfirmAndStayButtonAction() {
+        try {
+            String groupName = groupChoiceBox.getValue();
+            Integer class_number = classChoiceBox.getValue();
+            String subjectName = subjectChoiceBox.getValue();
+            String teacherName = teacherChoiceBox.getValue();
+            String auditoryBuilding = auditoryBuildingChoiceBox.getValue();
+            Integer auditoryRoom = auditoryRoomChoiceBox.getValue();
+            Integer auditoryFloor = auditoryFloorChoiceBox.getValue();
+            String date = dayOfWeek.getValue();
+            createScheduleDBController.saveToDatabase(groupName, class_number, subjectName, teacherName,auditoryFloor,auditoryBuilding,auditoryRoom,date);
+            showNotification("Successfully created a new schedule for : "+ groupChoiceBox.getValue());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
+    }
+    public static void showNotification(String message) {
+        Notifications notifications = Notifications.create()
+                .title("Уведомление")
+                .text(message)
+                .hideAfter(Duration.seconds(5)) // Уведомление исчезнет через 5 секунд
+                .position(Pos.TOP_RIGHT);
+        notifications.show();
+    }
     @FXML
     void handleBackButtonAction(ActionEvent event) {
         try {

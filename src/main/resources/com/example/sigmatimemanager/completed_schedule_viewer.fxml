@@ -15,37 +15,37 @@
          <children>
             <TableView fx:id="Monday" layoutX="10.0" layoutY="25.0" prefHeight="347.0" prefWidth="333.0">
               <columns>
-                <TableColumn fx:id="Subject1" prefWidth="133.60000228881836" text="C1" />
-                <TableColumn fx:id="Teacher1" prefWidth="122.39997863769531" text="C2" />
-                  <TableColumn fx:id="Auditory1" prefWidth="77.60003662109375" text="C2" />
+                <TableColumn fx:id="Subject1" prefWidth="133.60000228881836" text="Subject" />
+                <TableColumn fx:id="Teacher1" prefWidth="122.39997863769531" text="Teacher" />
+                  <TableColumn fx:id="Auditory1" prefWidth="77.60003662109375" text="Auditory" />
               </columns>
             </TableView>
             <TableView fx:id="Tuesday" layoutX="380.0" layoutY="25.0" prefHeight="347.0" prefWidth="333.0">
                <columns>
-                  <TableColumn fx:id="Subject2" prefWidth="133.60000228881836" text="C1" />
-                  <TableColumn fx:id="Teacher2" prefWidth="122.39997863769531" text="C2" />
-                  <TableColumn fx:id="Auditory2" prefWidth="77.60003662109375" text="C2" />
+                  <TableColumn fx:id="Subject2" prefWidth="133.60000228881836" text="Subject" />
+                  <TableColumn fx:id="Teacher2" prefWidth="122.39997863769531" text="Teacher" />
+                  <TableColumn fx:id="Auditory2" prefWidth="77.60003662109375" text="Auditory" />
                </columns>
             </TableView>
             <TableView fx:id="Friday" layoutX="1135.0" layoutY="250.0" prefHeight="347.0" prefWidth="333.0">
                <columns>
-                  <TableColumn fx:id="Subject5" prefWidth="133.60000228881836" text="C1" />
-                  <TableColumn fx:id="Teacher5" prefWidth="122.39997863769531" text="C2" />
-                  <TableColumn fx:id="Auditory5" prefWidth="77.60003662109375" text="C2" />
+                  <TableColumn fx:id="Subject5" prefWidth="133.60000228881836" text="Subject" />
+                  <TableColumn fx:id="Teacher5" prefWidth="122.39997863769531" text="Teacher" />
+                  <TableColumn fx:id="Auditory5" prefWidth="77.60003662109375" text="Auditory" />
                </columns>
             </TableView>
             <TableView fx:id="Thursday" layoutX="1135.0" layoutY="-122.0" prefHeight="347.0" prefWidth="333.0">
                <columns>
-                  <TableColumn fx:id="Subject4" prefWidth="133.60000228881836" text="C1" />
-                  <TableColumn fx:id="Teacher4" prefWidth="122.39997863769531" text="C2" />
-                  <TableColumn fx:id="Auditory4" prefWidth="77.60003662109375" text="C2" />
+                  <TableColumn fx:id="Subject4" prefWidth="133.60000228881836" text="Subject" />
+                  <TableColumn fx:id="Teacher4" prefWidth="122.39997863769531" text="Teacher" />
+                  <TableColumn fx:id="Auditory4" prefWidth="77.60003662109375" text="Auditory" />
                </columns>
             </TableView>
             <TableView fx:id="Wednesday" layoutX="750.0" layoutY="25.0" prefHeight="347.0" prefWidth="333.0">
                <columns>
-                  <TableColumn fx:id="Subject3" prefWidth="133.60000228881836" text="C1" />
-                  <TableColumn fx:id="Teacher3" prefWidth="122.39997863769531" text="C2" />
-                  <TableColumn fx:id="Auditory3" prefWidth="77.60003662109375" text="C2" />
+                  <TableColumn fx:id="Subject3" prefWidth="133.60000228881836" text="Subject" />
+                  <TableColumn fx:id="Teacher3" prefWidth="122.39997863769531" text="Teacher" />
+                  <TableColumn fx:id="Auditory3" prefWidth="77.60003662109375" text="Auditory" />
                </columns>
             </TableView>
             <Label alignment="CENTER" layoutX="100.0" layoutY="-10.0" prefHeight="33.0" prefWidth="152.0" text="Monday" />
